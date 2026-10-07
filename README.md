@@ -30,7 +30,7 @@ From the menu, a user can:
 - save data manually
 - exit the program
 
-When the program exits, it saves automatically.
+When you exit with menu option 9, it saves automatically. Closing the terminal, pressing Ctrl+C, or ending input skips that save, so any changes since the last option 8 are lost.
 
 ## 2. Project Structure
 

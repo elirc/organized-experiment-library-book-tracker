@@ -36,7 +36,7 @@ That makes this file useful for learning where UI logic should stop.
 
 - process entry point
 - creates `FileStorage`, `LibraryManager`, and `App`
-- handles startup `IOException`
+- handles startup `IOException`, and only that. A malformed number or date in `data/books.txt` or `data/borrowers.txt` throws an unchecked `NumberFormatException` or `DateTimeParseException` from `FileStorage` (`FileStorage.java:50-57`, `150-156`). That escapes `main` (`App.java:28-35`) as a stack trace. Reproduced with `dueDate=2000-13-45`: the app dies before the menu appears. The data file is left untouched, because nothing has been saved yet.
 
 ### `run()`
 

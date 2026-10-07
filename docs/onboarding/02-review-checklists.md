@@ -242,3 +242,15 @@ If you only have a few minutes, ask these questions:
 3. If persistence changed, does save still match load?
 4. If user input changed, are failure messages and retry behavior still clear?
 5. Did the change create any new assumptions that are not explicitly protected by code?
+
+## Known Instances In This Snapshot (Verified)
+
+Reproduced by compiling `src/` with JDK 17 and piping menu input into `librarytracker.App` from a scratch directory.
+
+1. **Ids start at 0.** `findNextBookId` and `findNextBorrowerId` start from `highestId = -1` (`LibraryManager.java:135-157`), so the first book and the first borrower both get ID 0. A record saved without an `id=` line also loads as ID 0 (`FileStorage.java:50`, `73`), which can silently duplicate an existing id.
+   - **Check:** add one book to an empty `data/` folder and you will see `Book added with ID 0.`
+2. **A due date in the past is accepted.** `readOptionalDate` only checks the format (`App.java:216-231`), and `checkOutBook` stores whatever it gets (`LibraryManager.java:68-86`). Checking out with due date `2000-01-01` succeeds, and the very next list shows the book as `(OVERDUE)`.
+   - Goal: decide whether that should be rejected or allowed for back-dated records, and write the rule where `checkOutBook` can enforce it.
+   - **Check:** after your change, the same input either prints a clear refusal or is accepted on purpose, with a comment explaining why.
+3. **Malformed data crashes startup** with an uncaught `DateTimeParseException` (see `files/src/librarytracker/App.java.md`). The checklist item "handling missing files but not malformed files" above is not hypothetical here.
+4. **Saving is manual.** Changes reach disk only through option 8 or option 9 (`App.java:157-169`). The two files are written one after the other (`FileStorage.java:35-39`), so a failure between them leaves books and borrowers out of step, for example a book whose `borrowerId` names a borrower who was never saved.

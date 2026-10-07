@@ -1,5 +1,7 @@
 # Codebase Map
 
+> Snapshot note: this repo is an organized snapshot of the original code behind `elirc/j2`. Its `docs/onboarding` matches that repo, but `elirc/j2` later reworked all five Java files and refined only its `astraupskill/` course, which is absent here, so nothing was ported. This snapshot was compiled and run with JDK 17. Reproduced behaviors (ids starting at 0, past due dates accepted, a startup crash on a malformed date) were added to `02-review-checklists.md`, and the README's "saves automatically" line was corrected.
+
 ## What Kind Of Application This Is
 
 Observed from code:
